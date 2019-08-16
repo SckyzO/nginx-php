@@ -55,6 +55,7 @@ ARG PHP_CONF=" \
     --with-png-dir \
     --with-webp-dir \
     --with-xpm-dir=no \
+    --with-libzip=/usr/include \
     --with-freetype-dir \
     --enable-gd-native-ttf \
     --disable-gd-jis-conv \
@@ -105,6 +106,7 @@ ARG CUSTOM_BUILD_PKGS=" \
     openssl-dev \
     libbz2 \
     sqlite-dev \
+    libzip-dev \
     imap-dev"
 
 ARG CUSTOM_PKGS=" \
