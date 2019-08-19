@@ -59,7 +59,7 @@ ARG PHP_CONF=" \
     --with-freetype-dir \
     --enable-gd-native-ttf \
     --disable-gd-jis-conv \
-    --with-zlib
+    --with-zlib \
     --enable-zip"
 
 ARG PHP_EXT_LIST=" \
