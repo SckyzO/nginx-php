@@ -1,4 +1,4 @@
-FROM alpine:3.9
+FROM alpine:3.10
 
 ARG BUILD_CORES
 
@@ -55,9 +55,7 @@ ARG PHP_CONF=" \
     --with-png-dir \
     --with-webp-dir \
     --with-xpm-dir=no \
-    --with-libzip=/usr/include \
     --with-freetype-dir \
-    --enable-gd-native-ttf \
     --disable-gd-jis-conv \
     --with-zlib \
     --enable-zip"
@@ -108,7 +106,6 @@ ARG CUSTOM_BUILD_PKGS=" \
     openssl-dev \
     libbz2 \
     sqlite-dev \
-    libzip-dev \
     imap-dev"
 
 ARG CUSTOM_PKGS=" \
@@ -129,7 +126,7 @@ RUN echo "## Packages installation ##" && \
     libtool \
     build-base \
     pcre-dev \
-    zlib-dev \
+    libzip-dev \
     wget \
     gnupg \
     autoconf \
@@ -150,6 +147,7 @@ RUN echo "## Packages installation ##" && \
     libxml2 \
     openssl \
     libwebp \
+    libzip \
     gd \
     pcre \
     zlib \
