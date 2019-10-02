@@ -1,5 +1,11 @@
 # Nginx & PHP
 
+Current version : 
+Alpine : 3.10
+Nginx : 1.17.4
+PHP : 7.3.10
+LIBICONV : 1.16
+
 ## Description
 What is [Nginx](http://nginx.org)?
 
