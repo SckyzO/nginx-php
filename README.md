@@ -1,10 +1,10 @@
 # Nginx & PHP
 
 Current version : 
-Alpine : 3.10
-Nginx : 1.17.4
-PHP : 7.3.10
-LIBICONV : 1.16
+* Alpine : 3.10
+* Nginx : 1.17.4
+* PHP : 7.3.10
+* LIBICONV : 1.16
 
 ## Description
 What is [Nginx](http://nginx.org)?
@@ -51,7 +51,7 @@ docker build -t sckyzo/nginx-php \
 ## Configuration
 ### Environments
 * UID : Choose uid for launch rtorrent (default : 1000)
-* GID : Choose gid for launch rtorrent (default : 999)
+* GID : Choose gid for launch rtorrent (default : 998)
 
 ### Volumes
 * /nginx/sites-enabled : Place your vhost here
