@@ -2,7 +2,7 @@
 
 Current version : 
 * Alpine : 3.10
-* Nginx : 1.17.4
+* Nginx : 1.17.5
 * PHP : 7.3.10
 * LIBICONV : 1.16
 
