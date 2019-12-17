@@ -104,7 +104,7 @@ ARG CUSTOM_BUILD_PKGS=" \
     libedit-dev \
     libxml2-dev \
     openssl-dev \
-    libonig-dev \
+    oniguruma-dev \
     libbz2 \
     sqlite-dev \
     imap-dev"
