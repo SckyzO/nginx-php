@@ -2,8 +2,8 @@ FROM alpine:3.10
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.17.6
-ARG PHP_VER=7.4.0
+ARG NGINX_VER=1.17.7
+ARG PHP_VER=7.4.1
 ARG LIBICONV_VERSION=1.16
 
 LABEL description="nginx + php image based on Alpine" \
@@ -105,6 +105,7 @@ ARG CUSTOM_BUILD_PKGS=" \
     libxml2-dev \
     openssl-dev \
     oniguruma-dev \
+    oniguruma \
     libbz2 \
     sqlite-dev \
     imap-dev"
