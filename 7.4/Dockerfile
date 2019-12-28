@@ -105,7 +105,6 @@ ARG CUSTOM_BUILD_PKGS=" \
     libxml2-dev \
     openssl-dev \
     oniguruma-dev \
-    oniguruma \
     libbz2 \
     sqlite-dev \
     imap-dev"
@@ -113,6 +112,7 @@ ARG CUSTOM_BUILD_PKGS=" \
 ARG CUSTOM_PKGS=" \
     freetype \
     openldap \
+    oniguruma \
     gmp \
     bzip2-dev \
     icu \
