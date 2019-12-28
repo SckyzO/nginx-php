@@ -1,4 +1,4 @@
-FROM alpine:3.10
+FROM alpine:3.11
 
 ARG BUILD_CORES
 
@@ -107,6 +107,7 @@ ARG CUSTOM_BUILD_PKGS=" \
     oniguruma-dev \
     libbz2 \
     sqlite-dev \
+    sqlite-dev \
     imap-dev"
 
 ARG CUSTOM_PKGS=" \
@@ -117,6 +118,7 @@ ARG CUSTOM_PKGS=" \
     bzip2-dev \
     icu \
     libpq \
+    sqlite-libs \
     c-client"
 
 COPY rootfs /
