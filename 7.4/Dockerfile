@@ -2,8 +2,8 @@ FROM alpine:3.11
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.17.7
-ARG PHP_VER=7.4.1
+ARG NGINX_VER=1.17.9
+ARG PHP_VER=7.4.4
 ARG LIBICONV_VERSION=1.16
 
 LABEL description="nginx + php image based on Alpine" \
