@@ -2,8 +2,8 @@ FROM alpine:3.11
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.17.9
-ARG PHP_VER=7.4.4
+ARG NGINX_VER=1.17.10
+ARG PHP_VER=7.4.5
 ARG LIBICONV_VERSION=1.16
 
 LABEL description="nginx + php image based on Alpine" \
@@ -108,12 +108,13 @@ ARG CUSTOM_BUILD_PKGS=" \
     libbz2 \
     sqlite-dev \
     sqlite-dev \
-    imap-dev"
+    imap-dev \
+    imagemagick-libs \
+    imagemagick-dev"
 
 ARG CUSTOM_PKGS=" \
     freetype \
     openldap \
-    oniguruma \
     gmp \
     bzip2-dev \
     icu \
@@ -149,6 +150,7 @@ RUN echo "## Packages installation ##" && \
     curl \
     libedit \
     libxml2 \
+    imagemagick \
     openssl \
     libwebp \
     libzip \
@@ -191,6 +193,8 @@ RUN echo "## Packages installation ##" && \
     make clean && \
     chmod u+x /usr/local/bin/* /etc/s6.d/*/* && \
     docker-php-ext-install ${PHP_EXT_LIST} && \
+    pecl install imagick && \
+    docker-php-ext-enable imagick && \
     apk del ${BUILD_DEPS} && \
     rm -Rf /tmp/* /var/cache/apk/* /usr/src/* && \
     mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
