@@ -1,0 +1,6 @@
+# always ignore files
+*.DS_Store
+*.sublime-*
+
+# Test and Backup
+Backup/

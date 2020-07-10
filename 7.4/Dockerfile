@@ -1,4 +1,4 @@
-FROM alpine:3.11
+FROM alpine:3.12
 
 ARG BUILD_CORES
 
@@ -7,7 +7,7 @@ ARG PHP_VER=7.4.7
 ARG LIBICONV_VERSION=1.16
 
 LABEL description="nginx + php image based on Alpine" \
-      maintainer="SckyzO <sckyzo@gmail.com>" \
+      maintainer="Wonderfall <wonderfall@targaryen.house>" \
       php_version="PHP v$PHP_VER built from source" \
       nginx_version="nginx v$NGINX_VER built from source"
 
@@ -50,15 +50,15 @@ ARG PHP_CONF=" \
     --with-libedit \
     --with-openssl \
     --with-iconv=/usr/local \
-    --with-gd \
-    --with-jpeg-dir \
-    --with-png-dir \
+    --enable-gd \
+    --with-freetype \
+    --with-jpeg \
     --with-webp-dir \
     --with-xpm-dir=no \
-    --with-freetype-dir \
+    --enable-gd-native-ttf \
     --disable-gd-jis-conv \
-    --with-zlib \
-    --enable-zip"
+    --enable-bcmath \
+    --with-zlib"
 
 ARG PHP_EXT_LIST=" \
     mysqli \
@@ -87,7 +87,6 @@ ARG PHP_EXT_LIST=" \
     ftp \
     exif \
     gmp \
-    phar \
     imap"
 
 ARG CUSTOM_BUILD_PKGS=" \
@@ -104,13 +103,9 @@ ARG CUSTOM_BUILD_PKGS=" \
     libedit-dev \
     libxml2-dev \
     openssl-dev \
-    oniguruma-dev \
     libbz2 \
     sqlite-dev \
-    sqlite-dev \
-    imap-dev \
-    imagemagick-libs \
-    imagemagick-dev"
+    imap-dev"
 
 ARG CUSTOM_PKGS=" \
     freetype \
@@ -119,83 +114,84 @@ ARG CUSTOM_PKGS=" \
     bzip2-dev \
     icu \
     libpq \
-    sqlite-libs \
     c-client"
 
 COPY rootfs /
 
-RUN echo "## Packages installation ##" && \
-    NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} && \
-    BUILD_DEPS=" \
+RUN NB_CORES=${BUILD_CORES-$(getconf _NPROCESSORS_CONF)} \
+
+### Packages installation
+ && BUILD_DEPS=" \
     linux-headers \
     libtool \
     build-base \
     pcre-dev \
-    libzip-dev \
+    zlib-dev \
     wget \
     gnupg \
     autoconf \
     gcc \
     g++ \
     libc-dev \
+    libzip-dev \
     make \
     pkgconf \
     curl-dev \
     ca-certificates \
-    ${CUSTOM_BUILD_PKGS}" && \
-    apk -U add \
+    oniguruma-dev \
+    ${CUSTOM_BUILD_PKGS}" \
+ && apk -U add \
     ${BUILD_DEPS} \
     s6 \
     su-exec \
     curl \
     libedit \
     libxml2 \
-    imagemagick \
+    oniguruma \
     openssl \
     libwebp \
     libzip \
+    sqlite-libs \
     gd \
     pcre \
     zlib \
-    ${CUSTOM_PKGS} && \
-    echo "## Downloading Nginx ##" && \
-    wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O /tmp/nginx-${NGINX_VER}.tar.gz && \
-    wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc -O /tmp/nginx-${NGINX_VER}.tar.gz.asc && \
-    echo "## Downloading PHP ##" && \
-    wget ${PHP_MIRROR}/distributions/php-${PHP_VER}.tar.gz -O /tmp/php-${PHP_VER}.tar.gz && \
-    wget ${PHP_MIRROR}/distributions/php-${PHP_VER}.tar.gz.asc -O /tmp/php-${PHP_VER}.tar.gz.asc && \
-    echo "## Downloading Libiconv ##" && \
-    wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz -O /tmp/libiconv-${LIBICONV_VERSION}.tar.gz && \
-    echo "## Create folders ##" && \
-    mkdir -p /php/conf.d && \
-    mkdir -p /usr/src && \
-    echo "## Unzip downloaded sources ##" && \
-    tar xzf /tmp/nginx-${NGINX_VER}.tar.gz -C /usr/src && \
-    tar xzvf /tmp/php-${PHP_VER}.tar.gz -C /usr/src && \
-    tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src && \
-    echo "## Nginx installation ##" && \
-    cd /usr/src/nginx-${NGINX_VER} && \
-    ./configure --with-cc-opt="-O3 -fPIE -fstack-protector-strong" ${NGINX_CONF} && \
-    make -j ${NB_CORES} && \
-    make install && \
-    echo "## GNU Libiconv installation ##" && \
-    cd /usr/src/libiconv-${LIBICONV_VERSION} && \
-    ./configure --prefix=/usr/local && \
-    make && make install && libtool --finish /usr/local/lib && \
-    echo "## PHP installation" && \
-    mv /usr/src/php-${PHP_VER} /usr/src/php && \
-    cd /usr/src/php && \
-    ./configure CFLAGS="-O3 -fstack-protector-strong" ${PHP_CONF} && \
-    make -j ${NB_CORES} && \
-    make install && \
-    echo "## Clean system ##" && \
-    { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } && \
-    make clean && \
-    chmod u+x /usr/local/bin/* /etc/s6.d/*/* && \
-    docker-php-ext-install ${PHP_EXT_LIST} && \
-    pecl install imagick && \
-    docker-php-ext-enable imagick && \
-    apk del ${BUILD_DEPS} && \
-    rm -Rf /tmp/* /var/cache/apk/* /usr/src/* && \
-    mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
+    ${CUSTOM_PKGS} \
 
+### Source downloading
+ && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz -O /tmp/nginx-${NGINX_VER}.tar.gz \
+ && wget http://nginx.org/download/nginx-${NGINX_VER}.tar.gz.asc -O /tmp/nginx-${NGINX_VER}.tar.gz.asc \
+ && wget ${PHP_MIRROR}/get/php-${PHP_VER}.tar.gz/from/this/mirror -O /tmp/php-${PHP_VER}.tar.gz \
+ && wget ${PHP_MIRROR}/get/php-${PHP_VER}.tar.gz.asc/from/this/mirror -O /tmp/php-${PHP_VER}.tar.gz.asc \
+ && wget http://ftp.gnu.org/pub/gnu/libiconv/libiconv-${LIBICONV_VERSION}.tar.gz -O /tmp/libiconv-${LIBICONV_VERSION}.tar.gz \
+ && mkdir -p /php/conf.d \
+ && mkdir -p /usr/src \
+ && tar xzf /tmp/nginx-${NGINX_VER}.tar.gz -C /usr/src \
+ && tar xzvf /tmp/php-${PHP_VER}.tar.gz -C /usr/src \
+ && tar xzf /tmp/libiconv-${LIBICONV_VERSION}.tar.gz -C /usr/src \
+
+### nginx installation
+ && cd /usr/src/nginx-${NGINX_VER} \
+ && ./configure --with-cc-opt="-O3 -fPIE -fstack-protector-strong" ${NGINX_CONF} \
+ && make -j ${NB_CORES} \
+ && make install \
+
+### GNU Libiconv installation
+ && cd /usr/src/libiconv-${LIBICONV_VERSION} \
+ && ./configure --prefix=/usr/local \
+ && make && make install && libtool --finish /usr/local/lib \
+
+### PHP installation
+ && mv /usr/src/php-${PHP_VER} /usr/src/php \
+ && cd /usr/src/php \
+ && ./configure CFLAGS="-O3 -fstack-protector-strong" ${PHP_CONF} \
+ && make -j ${NB_CORES} \
+ && make install \
+
+### Strip, clean, install modules
+ && { find /usr/local/bin /usr/local/sbin -type f -perm +0111 -exec strip --strip-all '{}' + || true; } \
+ && make clean \
+ && chmod u+x /usr/local/bin/* /etc/s6.d/*/* \
+ && docker-php-ext-install ${PHP_EXT_LIST} \
+ && apk del ${BUILD_DEPS} \
+ && rm -rf /tmp/* /var/cache/apk/* /usr/src/* \
+ && mkdir -p /nginx/logs /nginx/run /php/php-fpm.d /php/logs /php/run /php/session
