@@ -2,12 +2,12 @@ FROM alpine:3.12
 
 ARG BUILD_CORES
 
-ARG NGINX_VER=1.19.1
-ARG PHP_VER=7.4.8
+ARG NGINX_VER=1.19.3
+ARG PHP_VER=7.4.11
 ARG LIBICONV_VERSION=1.16
 
 LABEL description="nginx + php image based on Alpine" \
-      maintainer="Wonderfall <wonderfall@targaryen.house>" \
+      maintainer="SckyzO" \
       php_version="PHP v$PHP_VER built from source" \
       nginx_version="nginx v$NGINX_VER built from source"
 
