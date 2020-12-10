@@ -2,8 +2,8 @@
 
 Current version : Latest - PHP 7.4 :
 * Alpine : 3.12
-* Nginx : 1.19.3
-* PHP : 7.4.11
+* Nginx : 1.19.5
+* PHP : 7.4.13
 * LIBICONV : 1.16
 
 Old version : PHP 7.3 :
